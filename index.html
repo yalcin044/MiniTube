@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ERAY YALCIN</title>
+</head>
+
+<body style="font-family: Arial; margin: 0; background: #e9eef5;">
+
+<!--
+    ERAY YALCIN - 20220702105
+    index.html
+    Initial page of the MiniTube project.
+    This page provides access to the SQL query page and starts database initialization.
+-->
+
+<div style="max-width: 1100px; margin: 20px auto; padding: 30px; background: #f8fbff; min-height: 90vh; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+
+    <!-- Header with MiniTube logo, project information and navigation button -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <div style="display: flex; align-items: center;">
+            <div style="width: 180px; height: 72px; position: relative; margin-right: 18px;">
+                <img
+                    src="data/minitube_logo.png"
+                    style="width: 240px; height: auto; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+            </div>
+
+            <div>
+                <div style="font-size: 18px; font-weight: bold; color: #222;">
+                    CSE 348 TERM PROJECT SPRING 2026
+                </div>
+                <div style="font-size: 14px; color: #555; margin-top: 4px;">
+                    ERAY YALCIN - 20220702105
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <button
+                type="button"
+                onclick="window.location.href='sql.php'"
+                style="padding: 8px 16px; font-size: 14px; cursor: pointer; background: #065fd4; color: #fff; border: none; border-radius: 8px; font-weight: bold;">
+                SQL Query Page
+            </button>
+        </div>
+    </div>
+
+    <!-- Project information and database initialization button -->
+    <div style="text-align: center; margin-top: 120px;">
+        <h1 style="color: #222; margin-bottom: 15px;">Welcome to MiniTube</h1>
+        <p style="color: #555; margin-bottom: 25px;">
+            Please click the button to initialize the database and continue
+        </p>
+
+        <button
+            type="button"
+            onclick="window.location.href='install.php'"
+            style="padding: 10px 24px; font-size: 15px; cursor: pointer; background: #b91c1c; color: #fff; border: none; border-radius: 8px; font-weight: bold;">
+            Initialize the Database
+        </button>
+    </div>
+
+</div>
+
+</body>
+</html>

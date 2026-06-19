@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><?php echo $video['title']; ?></title>
+</head>
+
+<body style="font-family: Arial; margin: 0; background: #e9eef5;">
+
+<!--
+    ERAY YALCIN - 20220702105
+    watch.html
+    Video watch page of the MiniTube project.
+    This page displays video information, comments and comment forms.
+-->
+
+<div style="max-width: 1100px; margin: 20px auto; padding: 30px; background: #f6f9fc; min-height: 90vh; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+
+    <!-- Header with MiniTube logo and navigation buttons -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <div style="display: flex; align-items: center;">
+            <div style="width: 180px; height: 72px; position: relative; margin-right: 18px;">
+                <img
+                    src="data/minitube_logo.png"
+                    style="width: 240px; height: auto; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+            </div>
+        </div>
+
+        <div>
+            <button
+                type="button"
+                onclick="window.location.href='index.html'"
+                style="padding: 8px 16px; font-size: 14px; cursor: pointer; background: #065fd4; color: #fff; border: none; border-radius: 8px; font-weight: bold; margin-right: 8px;">
+                Initial Page
+            </button>
+
+            <button
+                type="button"
+                onclick="window.location.href='login.html'"
+                style="padding: 8px 16px; font-size: 14px; cursor: pointer; background: #065fd4; color: #fff; border: none; border-radius: 8px; font-weight: bold; margin-right: 8px;">
+                Login Page
+            </button>
+
+            <button
+                type="button"
+                onclick="window.location.href='sql.php'"
+                style="padding: 8px 16px; font-size: 14px; cursor: pointer; background: #065fd4; color: #fff; border: none; border-radius: 8px; font-weight: bold;">
+                SQL Query Page
+            </button>
+        </div>
+    </div>
+
+    <h1 style="color: #222; margin-bottom: 20px;"><?php echo $video['title']; ?></h1>
+
+    <!-- Embedded YouTube video player -->
+    <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; margin-bottom: 20px;">
+        <iframe
+            src="<?php echo $embed_url; ?>"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+            allow="autoplay; encrypted-media"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- Video information table -->
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px; background: #ffffff;">
+        <tr>
+            <td style="width: 150px; padding: 10px; border: 1px solid #d8dee8;"><strong>Channel:</strong></td>
+            <td style="padding: 10px; border: 1px solid #d8dee8;">
+                <a
+                    href="channel.php?user_id=<?php echo $user_id; ?>&channel_id=<?php echo $video['channel_id']; ?>"
+                    style="color: #1f2937; text-decoration: none; font-weight: bold;">
+                    <?php echo $video['channel_name']; ?>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #d8dee8;"><strong>Country:</strong></td>
+            <td style="padding: 10px; border: 1px solid #d8dee8;"><?php echo $video['uploader_country']; ?></td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #d8dee8;"><strong>Duration:</strong></td>
+            <td style="padding: 10px; border: 1px solid #d8dee8;">
+                <?php
+                    $minutes = intval($video['duration_seconds'] / 60);
+                    $seconds = $video['duration_seconds'] % 60;
+                    printf("%d:%02d", $minutes, $seconds);
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #d8dee8;"><strong>Uploaded:</strong></td>
+            <td style="padding: 10px; border: 1px solid #d8dee8;"><?php echo $video['uploaded_at']; ?></td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #d8dee8;"><strong>Views:</strong></td>
+            <td style="padding: 10px; border: 1px solid #d8dee8;"><?php echo $video['view_count']; ?></td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #d8dee8;"><strong>Badge:</strong></td>
+            <td style="padding: 10px; border: 1px solid #d8dee8;"><?php echo $video['popularity_badge']; ?></td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #d8dee8;"><strong>Watch on YouTube:</strong></td>
+            <td style="padding: 10px; border: 1px solid #d8dee8;">
+                <a
+                    href="<?php echo $video['url']; ?>"
+                    target="_blank"
+                    style="color: #1f2937; text-decoration: none;">
+                    <?php echo $video['url']; ?>
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <h2 style="color: #333;">Comments</h2>
+
+    <?php foreach ($comments as $comment): ?>
+        <?php $reply_form_id = "reply-form-" . $comment['parent_id']; ?>
+
+        <!-- Top-level comment -->
+        <div style="margin-bottom: 12px; padding: 12px; border: 1px solid #d8dee8; border-radius: 6px; background: #ffffff; word-wrap: break-word;">
+            <strong><?php echo $comment['parent_username']; ?></strong>
+            <span style="color: #666; font-size: 13px;">(<?php echo $comment['parent_posted_at']; ?>)</span>
+            <p style="margin: 6px 0;"><?php echo $comment['parent_body']; ?></p>
+
+            <button
+                type="button"
+                onclick="document.getElementById('<?php echo $reply_form_id; ?>').style.display='block'"
+                style="font-size: 13px; cursor: pointer; background: #b91c1c; color: white; border: none; border-radius: 8px; padding: 6px 14px; font-weight: bold;">
+                Reply
+            </button>
+
+            <form
+                id="<?php echo $reply_form_id; ?>"
+                action="watch.php?user_id=<?php echo $user_id; ?>&video_id=<?php echo $current_video_id; ?>"
+                method="post"
+                style="display: none; margin-top: 8px;">
+                <input type="hidden" name="parent_comment_id" value="<?php echo $comment['parent_id']; ?>">
+
+                <textarea
+                    name="comment_body"
+                    rows="2"
+                    required
+                    style="width: 100%; padding: 8px; border: 1px solid #bfc7d1; border-radius: 6px; box-sizing: border-box; resize: none;"></textarea><br>
+
+                <input
+                    type="submit"
+                    value="Post Reply"
+                    style="margin-top: 6px; padding: 8px 16px; font-size: 14px; cursor: pointer; background: #b91c1c; color: #fff; border: none; border-radius: 8px; font-weight: bold;">
+            </form>
+        </div>
+
+        <?php foreach ($comment['replies'] as $reply): ?>
+            <!-- Reply comment -->
+            <div style="margin-left: 40px; margin-bottom: 10px; padding: 10px; border: 1px solid #d8dee8; border-radius: 6px; background: #ffffff; word-wrap: break-word;">
+                <strong><?php echo $reply['reply_username']; ?></strong>
+                <span style="color: #666; font-size: 13px;">(<?php echo $reply['reply_posted_at']; ?>)</span>
+                <p style="margin: 6px 0;"><?php echo $reply['reply_body']; ?></p>
+            </div>
+        <?php endforeach; ?>
+
+    <?php endforeach; ?>
+
+    <h2 style="color: #333;">Post a Comment</h2>
+
+    <!-- New top-level comment form -->
+    <form action="watch.php?user_id=<?php echo $user_id; ?>&video_id=<?php echo $current_video_id; ?>" method="post">
+        <textarea
+            name="comment_body"
+            rows="3"
+            required
+            style="width: 100%; padding: 8px; border: 1px solid #bfc7d1; border-radius: 6px; box-sizing: border-box; resize: none;"></textarea><br>
+
+        <input
+            type="submit"
+            value="Post Comment"
+            style="margin-top: 8px; padding: 10px 24px; font-size: 15px; cursor: pointer; background: #b91c1c; color: #fff; border: none; border-radius: 8px; font-weight: bold;">
+    </form>
+
+</div>
+
+</body>
+</html>

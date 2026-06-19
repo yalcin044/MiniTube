@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello <?php echo $user['full_name']; ?>!</title>
+</head>
+
+<body style="font-family: Arial; margin: 0; background: #e9eef5;">
+
+<!--
+    ERAY YALCIN - 20220702105
+    feed.html
+    Homepage of the MiniTube project.
+    This page displays subscribed-channel videos, top channels and user profile.
+-->
+
+<div style="max-width: 1100px; margin: 20px auto; padding: 30px; background: #f6f9fc; min-height: 90vh; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);">
+
+    <!-- Header with MiniTube logo and navigation buttons -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+        <div style="display: flex; align-items: center;">
+            <div style="width: 180px; height: 72px; position: relative; margin-right: 18px;">
+                <img
+                    src="data/minitube_logo.png"
+                    style="width: 240px; height: auto; position: absolute; left: 0; top: 50%; transform: translateY(-50%);">
+            </div>
+        </div>
+
+        <div>
+            <button
+                type="button"
+                onclick="window.location.href='index.html'"
+                style="padding: 8px 16px; font-size: 14px; cursor: pointer; background: #065fd4; color: #fff; border: none; border-radius: 8px; font-weight: bold; margin-right: 8px;">
+                Initial Page
+            </button>
+
+            <button
+                type="button"
+                onclick="window.location.href='login.html'"
+                style="padding: 8px 16px; font-size: 14px; cursor: pointer; background: #065fd4; color: #fff; border: none; border-radius: 8px; font-weight: bold; margin-right: 8px;">
+                Login Page
+            </button>
+
+            <button
+                type="button"
+                onclick="window.location.href='sql.php'"
+                style="padding: 8px 16px; font-size: 14px; cursor: pointer; background: #065fd4; color: #fff; border: none; border-radius: 8px; font-weight: bold;">
+                SQL Query Page
+            </button>
+        </div>
+    </div>
+
+    <h1 style="text-align: center; color: #222; margin-bottom: 25px;">
+        Hello <?php echo $user['full_name']; ?>!
+    </h1>
+
+    <table cellpadding="10" style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <td valign="top" width="60%" style="border: 1px solid #d8dee8; background: #ffffff;">
+                <h2 style="color: #333;">Latest Videos from Your Subscriptions</h2>
+
+                <?php if (mysqli_num_rows($latest_videos) == 0): ?>
+                    <p>You are not subscribed to any channels yet.</p>
+                <?php else: ?>
+
+                    <!-- Latest videos table -->
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px; background: #ffffff;">
+                        <tr>
+                            <th style="background: #b91c1c; color: white; padding: 10px; border: 1px solid #d8dee8; text-align: left;">Video Title</th>
+                            <th style="background: #b91c1c; color: white; padding: 10px; border: 1px solid #d8dee8; text-align: left;">Channel</th>
+                            <th style="background: #b91c1c; color: white; padding: 10px; border: 1px solid #d8dee8; text-align: left;">Country</th>
+                            <th style="background: #b91c1c; color: white; padding: 10px; border: 1px solid #d8dee8; text-align: left;">Uploaded</th>
+                        </tr>
+
+                        <?php while ($video = mysqli_fetch_array($latest_videos)): ?>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #d8dee8;">
+                                <a
+                                    href="watch.php?user_id=<?php echo $user_id; ?>&video_id=<?php echo $video['video_id']; ?>"
+                                    style="color: #1f2937; text-decoration: none; font-weight: bold;">
+                                    <?php echo $video['title']; ?>
+                                </a>
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #d8dee8;">
+                                <a
+                                    href="channel.php?user_id=<?php echo $user_id; ?>&channel_id=<?php echo $video['channel_id']; ?>"
+                                    style="color: #1f2937; text-decoration: none;">
+                                    <?php echo $video['channel_name']; ?>
+                                </a>
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #d8dee8;"><?php echo $video['uploader_country']; ?></td>
+                            <td style="padding: 10px; border: 1px solid #d8dee8;"><?php echo $video['days_ago']; ?> days ago</td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </table>
+
+                <?php endif; ?>
+            </td>
+
+            <td valign="top" width="40%" style="border: 1px solid #d8dee8; background: #ffffff;">
+                <h2 style="color: #333;">Top 5 Channels</h2>
+
+                <!-- Top channels table -->
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px; background: #ffffff;">
+                    <tr>
+                        <th style="background: #b91c1c; color: white; padding: 10px; border: 1px solid #d8dee8; text-align: left;">Channel</th>
+                        <th style="background: #b91c1c; color: white; padding: 10px; border: 1px solid #d8dee8; text-align: left;">Subscribers</th>
+                    </tr>
+
+                    <?php while ($channel = mysqli_fetch_array($top_channels)): ?>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #d8dee8;">
+                            <a
+                                href="channel.php?user_id=<?php echo $user_id; ?>&channel_id=<?php echo $channel['channel_id']; ?>"
+                                style="color: #1f2937; text-decoration: none; font-weight: bold;">
+                                <img
+                                    src="<?php echo $channel['channel_image']; ?>"
+                                    width="40"
+                                    height="40"
+                                    style="border-radius: 50%; vertical-align: middle; margin-right: 8px;">
+                                <?php echo $channel['name']; ?>
+                            </a>
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #d8dee8;"><?php echo $channel['subscribers']; ?></td>
+                    </tr>
+                    <?php endwhile; ?>
+                </table>
+
+                <!-- Current user profile -->
+                <h2 style="color: #333;">Your Profile</h2>
+                <img
+                    src="<?php echo $user['user_image']; ?>"
+                    width="100"
+                    height="100"
+                    style="border-radius: 50%; border: 1px solid #d8dee8;"><br><br>
+
+                <strong>Name:</strong> <?php echo $user['full_name']; ?><br>
+                <strong>Country:</strong> <?php echo $user['country']; ?><br>
+                <strong>Joined:</strong> <?php echo $user['joined_on']; ?><br>
+                <strong>Bio:</strong> <?php echo $user['bio']; ?><br>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+</body>
+</html>
